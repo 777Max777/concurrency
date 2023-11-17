@@ -60,7 +60,69 @@ public class Order {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void seal(boolean isSealed) {
+        this.isSealed = isSealed;
+    }
+
+    public boolean isSealed() {
+        return isSealed;
+    }
+
+    public static class OrderBuilder {
+
+        private Long id;
+        private List<Item> items;
+        private PaymentInfo paymentInfo;
+        private boolean isPacked;
+        private Status status;
+
+        public OrderBuilder(List<Item> items) {
+            this.items = items;
+            this.status = Status.NEW;
+        }
+
+        public Order build() {
+            return new Order(
+                    this.id,
+                    this.items,
+                    this.paymentInfo,
+                    this.isPacked,
+                    this.status);
+        }
+
+        public OrderBuilder(Order order) {
+            this.id = order.getId();
+            this.items = order.getItems();
+            this.paymentInfo = order.getPaymentInfo();
+            this.isPacked = order.isPacked();
+            this.status = order.getStatus();
+        }
+
+        public OrderBuilder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public OrderBuilder withItems(List<Item> items) {
+            this.items = items;
+            return this;
+        }
+
+        public OrderBuilder withPaymentInfo(PaymentInfo paymentInfo) {
+            this.paymentInfo = paymentInfo;
+            this.status = Status.IN_PROGRESS;
+            return this;
+        }
+
+        public OrderBuilder withPacked(boolean packed) {
+            this.isPacked = packed;
+            this.status = Status.IN_PROGRESS;
+            return this;
+        }
+
+        public OrderBuilder withStatus(Status status) {
+            this.status = status;
+            return this;
+        }
     }
 }
